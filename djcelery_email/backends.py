@@ -15,7 +15,7 @@ class CeleryEmailBackend(BaseEmailBackend):
         return results
 
     def as_dict(self, message):
-        return {
+        message_dict = {
             'subject': message.subject,
             'body': message.body,
             'from_email': message.from_email,
@@ -24,5 +24,8 @@ class CeleryEmailBackend(BaseEmailBackend):
             # ignore connection
             'attachments': message.attachments,
             'headers': message.extra_headers,
-            'cc': message.cc
+            'cc': message.cc,
         }
+        if hasattr(message, 'alternatives'):
+            message_dict['alternatives'] = message.alternatives
+        return message_dict
